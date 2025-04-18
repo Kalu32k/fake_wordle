@@ -1,4 +1,6 @@
 {
+  "main": "backend/server.js",
+  "type": "module",
   "dependencies": {
     "express": "^5.1.0"
   }
