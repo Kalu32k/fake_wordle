@@ -1,19 +1,25 @@
 {
-  "name": "wordle",
+  "name": "fake_wordle",
   "version": "1.0.0",
   "main": "backend/server.js",
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "cd frontend && vite",
+    "dev": "concurrently \"npm run backend\" \"npm run frontend\"",
     "start": "node backend/server.js",
-    "build": "cd frontend && vite build"
+    "build": "cd frontend && npx vite build",
+    "backend": "node backend/server.js",
+    "frontend": "cd frontend && npx vite"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "express": "^5.1.0"
+    "express": "^5.1.0",
+    "mongoose": "^8.13.2"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
   }
 }

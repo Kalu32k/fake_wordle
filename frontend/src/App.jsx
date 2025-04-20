@@ -1,50 +1,190 @@
 import { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
 import "./App.css";
-
-const handleGuessSubmit = async () => {};
+import GuessInput from "./components/GuessInput.jsx";
+import GuessGrid from "./components/GuessGrid.jsx";
 
 function App() {
   const [guess, setGuess] = useState("");
   const [guesses, setGuesses] = useState([]);
   const [isGameOver, setIsGameOver] = useState(false);
   const [isGameStarted, setIsGameStarted] = useState(false);
+  const [startTime, setStartTime] = useState(null);
+  const [elapsedTime, setElapsedTime] = useState(null);
   const [playerName, setPlayerName] = useState("");
   const [wordLength, setWordLength] = useState(5);
-  const [allowReapeatingLetters, setAllowReapeatingLetters] = useState(false);
+  const [allowRepeatingLetters, setAllowRepeatingLetters] = useState(false);
+  const [isHighscoreSubmitted, setIsHighscoreSubmitted] = useState(false);
+  const handleGuessSubmit = async (guess) => {
+    if (isGameOver) {
+      alert("Game is already over!");
+      return;
+    }
+
+    const response = await fetch("/api/guess", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ guess }),
+    });
+
+    const data = await response.json();
+    if (data.result) {
+      console.log(data.result);
+      setGuesses([...guesses, data.result]);
+
+      // Checks to see if all letters come back green.
+      const allGreen = data.result.every((item) => item.color === "#6aaa64");
+      if (allGreen) {
+        setIsGameOver(true);
+
+        const endTime = Date.now();
+        const timeTaken = Math.floor((endTime - startTime) / 1000);
+        setElapsedTime(timeTaken);
+      }
+    }
+  };
+
+  const saveHighscore = async (name, time) => {
+    try {
+      const response = await fetch("/api/highscore", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name,
+          time,
+          date: new Date().toISOString(),
+        }),
+      });
+
+      const data = await response.json();
+      if (response.ok) {
+        alert("Highscore saved!");
+        console.log("Highscores:", data.highscores);
+      } else {
+        alert("Could not save to highscore " + data.error);
+      }
+    } catch (error) {
+      console.error("Error saving highscore:", error);
+      alert("an error occurred while saving the highscore.");
+    }
+  };
+
+  const handleStartGame = async () => {
+    try {
+      console.log("Word length:", wordLength);
+
+      const response = await fetch("/api/random", {
+        method: "POST", // Use POST instead of GET
+        headers: {
+          "Content-Type": "application/json", // Specify JSON content type
+        },
+        body: JSON.stringify({ wordLength, allowRepeatingLetters }), // Send JSON data
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        console.log(`Target word ${data}`);
+
+        setIsGameStarted(true);
+        setIsGameOver(false);
+        setGuesses([]);
+        setStartTime(Date.now());
+        setElapsedTime(null);
+        setPlayerName("");
+      } else {
+        const errorData = await response.json();
+        alert("Could not start the game: " + errorData.error);
+      }
+    } catch (error) {
+      console.error("Error starting game:", error);
+      alert("Error starting game:");
+    }
+  };
+
+  const handleNameSubmit = (e) => {
+    e.preventDefault();
+    if (isHighscoreSubmitted) {
+      alert("Highscore has already been submitted!");
+      return;
+    }
+
+    if (playerName.trim()) {
+      saveHighscore(playerName, elapsedTime);
+      setIsHighscoreSubmitted(true);
+    } else {
+      alert("Enter a valid name!");
+    }
+  };
 
   return (
     <main className="App">
-      <div className="container">
-        <h1 className="App__Header">Fake wordle</h1>
-        <p>Guess the word!</p>
-
-        <form onSubmit={handleGuessSubmit}></form>
-
-        <label>
-          Select word length:
-          <select>
-            <option value="3">3</option>
-            <option value="4">4</option>
-            <option value="5">5</option>
-            <option value="6">6</option>
-            <option value="7">7</option>
-            <option value="8">8</option>
-            <option value="9">9</option>
-            <option value="10">10</option>
-          </select>
-        </label>
-        <label>
-          Allow repeating letters:
-          <input
-            type="checkbox"
-            checked={allowReapeatingLetters}
-            onChange={"placeholder"}
-          />
-        </label>
-      </div>
-      <button className="play__button">Play</button>
+      {!isGameStarted ? (
+        <div className="container">
+          <h1 className="app__header">Fake Wordle</h1>
+          <label className="dropdown-label">
+            Select word length:
+            <select
+              value={wordLength}
+              onChange={(e) => setWordLength(Number(e.target.value))}
+            >
+              {[3, 4, 5, 6, 7, 8, 9, 10].map((length) => (
+                <option key={length} value={length}>
+                  {length}
+                </option>
+              ))}
+            </select>
+          </label>
+          <label className="checkbox-label">
+            Allow repeating letters:
+            <input
+              type="checkbox"
+              checked={allowRepeatingLetters}
+              onChange={(e) => setAllowRepeatingLetters(e.target.checked)}
+            />
+          </label>
+          <button className="play-button" onClick={handleStartGame}>
+            Play
+          </button>
+        </div>
+      ) : (
+        <div className="container">
+          <h1 className="app__header">Fake Wordle</h1>
+          {!isGameOver && <p>Guess the word!</p>}
+          {isGameOver && (
+            <div>
+              <p>Guess is correct! You finished in {elapsedTime} seconds!</p>
+              <form onSubmit={handleNameSubmit}>
+                <input
+                  type="text"
+                  className="input"
+                  placeholder="Enter your name"
+                  value={playerName}
+                  onChange={(e) => setPlayerName(e.target.value)}
+                />
+                <button
+                  type="submit"
+                  className="button"
+                  disabled={isHighscoreSubmitted}
+                >
+                  {isHighscoreSubmitted ? "Submitted" : "Save Highscore"}
+                </button>
+              </form>
+            </div>
+          )}
+          {!isGameOver && (
+            <GuessInput
+              onSubmit={handleGuessSubmit}
+              guess={guess}
+              setGuess={setGuess}
+              wordLength={wordLength} // Pass the chosen word length as a prop
+            />
+          )}
+          <GuessGrid guesses={guesses} />
+        </div>
+      )}
     </main>
   );
 }
