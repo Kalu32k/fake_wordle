@@ -61,7 +61,6 @@ function App() {
 
       const data = await response.json();
       if (response.ok) {
-        alert("Highscore saved!");
         console.log("Highscores:", data.highscores);
       } else {
         alert("Could not save to highscore " + data.error);
@@ -120,6 +119,7 @@ function App() {
   };
 
   return (
+
     <main className="App">
       {!isGameStarted ? (
         <div className="container">
