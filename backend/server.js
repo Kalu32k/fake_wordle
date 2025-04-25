@@ -1,26 +1,48 @@
 import express from "express";
 import fs from "fs";
-import { test } from "./logic/test.js";
+import { testGuess } from "./logic/testGuess.js";
 import mongoose from "mongoose";
 import { HighscoreDB } from "./data/models.js";
 import { generateRandomWord } from "./logic/generateWord.js";
 import { chosenWord } from "./logic/generateWord.js";
+import { render } from "./utility/template.js";
 
 const app = express();
 const PORT = 5080;
 
+app.set("view engine", "ejs");
+app.set("views", "./backend/views");
+
 app.use(express.json());
 
+app.use("/assets", express.static("frontend/dist/assets"));
+app.use("/public", express.static("frontend/public"));
+
 app.get("/", async (req, res) => {
+
   const htmlText = await fs.promises.readFile("frontend/dist/index.html");
   res.send(htmlText.toString());
 });
 
 app.get("/about", async (req, res) => {
-  const htmlText = await fs.promises.readFile("frontend/dist/about.html");
+  const htmlText = await fs.promises.readFile("frontend/public/about.html");
   res.send(htmlText.toString());
 });
 
+app.get("/test", async (req, res) => {
+  try {
+    await mongoose.connect("mongodb://localhost:27017");
+    const getHighscores = await HighscoreDB.find().sort({ time: 1 }).limit(20);
+
+   
+    render(req, res, "highscore.ejs", "Highscore", {
+      highscores: getHighscores
+    });
+  } catch (error) {
+    console.error("Error fetching highscores:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
 
 app.post("/api/random", async (req, res) => {
   try {
@@ -49,12 +71,10 @@ app.post("/api/guess", (req, res) => {
     const { guess } = req.body;
     console.log("Received guess:", guess);
 
-    console.log('hello')
     let bridge = chosenWord;
     console.log("Bridge word:", bridge);
 
-    console.log('is this fired?');
-    const result = test(guess, bridge);
+    const result = testGuess(guess, bridge);
     console.log("Result:", result);
 
 
@@ -102,7 +122,9 @@ app.post("/api/highscore", async (req, res) => {
   }
 });
 
-app.use("/assets", express.static("frontend/dist/assets"));
+
+
+
 
 app.listen(PORT, () => {
   console.log(`server is running on port ${PORT}`);
