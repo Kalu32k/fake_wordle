@@ -12,6 +12,26 @@ body {
     grid-template-rows: auto 1fr auto;
 }
 
+.highscore_container h1 {
+    background-color: #404040;
+    border-top-right-radius: 50px;
+    border-top-left-radius: 50px;
+    border-color: #696969;
+    border-top-color: #696969;
+    border-left-color: #696969;
+    border-right-color: #696969;
+    border-bottom-color: transparent;
+    border-style: solid;
+    border-width: 5px;
+    width: 74%;
+    margin: 15px auto 0px auto;
+    padding: 10px 0 5px 0 ;
+}
+
+.highscore_container h1 {
+    /* padding-top: 15px; */
+}
+
 table {
     margin: 0 auto;
     width: 80%;
