@@ -28,9 +28,7 @@ body {
     padding: 10px 0 5px 0 ;
 }
 
-.highscore_container h1 {
-    /* padding-top: 15px; */
-}
+
 
 table {
     margin: 0 auto;
@@ -102,6 +100,16 @@ p {
         align-items: center;
     }
 
+    .head_rank {
+       margin-left: 5px;
+       padding-left: 15px;
+    
+    }
+
+    .head_repeat {
+        margin-right: 5px;
+        padding-right: 15px;
+    }
 
     table {
         width: 100%;
