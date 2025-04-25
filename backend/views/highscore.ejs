@@ -8,6 +8,8 @@
       <th class="head_name">Name</th>
       <th class="head_time">Time</th>
       <th class="head_date">Date</th>
+      <th class="head_guess">Guesses</th>
+      <th class="head_repeat">Repeats</th>
     </tr>
   </thead>
   <tbody>
@@ -17,6 +19,8 @@
         <td class="table_name"><%= score.name %></td>
         <td class="table_time"><%= score.time %> seconds</td>
         <td class="table_date"><%= new Date(score.date).toLocaleDateString() %></td>
+        <td class="table_guess"><%= score.numberGuesses %></td>
+        <td class="table_repeat"><%= score.allowRepeatingLetters %></td>
       </tr>
     <% }) %>
   </tbody>

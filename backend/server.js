@@ -19,7 +19,6 @@ app.use("/assets", express.static("frontend/dist/assets"));
 app.use("/public", express.static("frontend/public"));
 
 app.get("/", async (req, res) => {
-
   const htmlText = await fs.promises.readFile("frontend/dist/index.html");
   res.send(htmlText.toString());
 });
@@ -34,9 +33,8 @@ app.get("/test", async (req, res) => {
     await mongoose.connect("mongodb://localhost:27017");
     const getHighscores = await HighscoreDB.find().sort({ time: 1 }).limit(20);
 
-   
     render(req, res, "highscore.ejs", "Highscore", {
-      highscores: getHighscores
+      highscores: getHighscores,
     });
   } catch (error) {
     console.error("Error fetching highscores:", error);
@@ -50,17 +48,18 @@ app.post("/api/random", async (req, res) => {
     console.log(`Received wordLength: ${wordLength}`);
     console.log(`Allow repeating letters: ${allowRepeatingLetters}`);
 
-    let generatedWord = await generateRandomWord(wordLength, allowRepeatingLetters);
+    let generatedWord = await generateRandomWord(
+      wordLength,
+      allowRepeatingLetters
+    );
     console.log("Words:", generatedWord);
-
-
 
     if (generatedWord.length === 0) {
       throw new Error("No valid words found with the given constraints.");
     }
 
-  console.log(generatedWord);
-    res.json( ' was generated' );
+    console.log(generatedWord);
+    res.json(" was generated");
   } catch (error) {
     res.status(500).json({ error: "Internal server error on random" });
   }
@@ -77,15 +76,12 @@ app.post("/api/guess", (req, res) => {
     const result = testGuess(guess, bridge);
     console.log("Result:", result);
 
-
-
     res.json({ result });
   } catch (error) {
     console.error("Error processing guess:", error);
     res.status(500).json({ error: "Internal server error on guess" });
   }
 });
-
 
 app.get("/api/highscores", async (req, res) => {
   try {
@@ -98,22 +94,25 @@ app.get("/api/highscores", async (req, res) => {
   }
 });
 
-
 app.post("/api/highscore", async (req, res) => {
   try {
     await mongoose.connect("mongodb://localhost:27017");
-// await mongoose.connect(process.env.MONGO_URL);
+    // await mongoose.connect(process.env.MONGO_URL);
 
     const newHighscore = new HighscoreDB({
       name: req.body.name,
       time: req.body.time,
       date: req.body.date,
+      numberGuesses: req.body.numberGuesses,
+      allowRepeatingLetters: req.body.allowRepeatingLetters,
     });
 
     console.log(newHighscore);
     await newHighscore.save();
 
-    const updatedHighscores = await HighscoreDB.find().sort({ time: 1 }).limit(10);
+    const updatedHighscores = await HighscoreDB.find()
+      .sort({ time: 1 })
+      .limit(10);
 
     res.status(201).json({ newHighscore, highscores: updatedHighscores });
   } catch (error) {
@@ -121,10 +120,6 @@ app.post("/api/highscore", async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 });
-
-
-
-
 
 app.listen(PORT, () => {
   console.log(`server is running on port ${PORT}`);

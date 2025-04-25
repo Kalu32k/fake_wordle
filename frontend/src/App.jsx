@@ -32,7 +32,7 @@ function App() {
     if (data.result) {
       console.log(data.result);
       setGuesses([...guesses, data.result]);
-
+      let numberGuesses = guesses.length + 1;
       // Checks to see if all letters come back green.
       const allGreen = data.result.every((item) => item.color === "#6aaa64");
       if (allGreen) {
@@ -45,8 +45,9 @@ function App() {
     }
   };
 
-  const saveHighscore = async (name, time) => {
+  const saveHighscore = async (name, time, numberGuesses, allowRepeatingLetters) => {
     try {
+      console.log("Saving highscore:", name, time, numberGuesses, allowRepeatingLetters);
       const response = await fetch("/api/highscore", {
         method: "POST",
         headers: {
@@ -56,6 +57,8 @@ function App() {
           name,
           time,
           date: new Date().toISOString(),
+          numberGuesses,
+          allowRepeatingLetters,
         }),
       });
 
@@ -76,11 +79,11 @@ function App() {
       console.log("Word length:", wordLength);
 
       const response = await fetch("/api/random", {
-        method: "POST", // Use POST instead of GET
+        method: "POST",
         headers: {
-          "Content-Type": "application/json", // Specify JSON content type
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify({ wordLength, allowRepeatingLetters }), // Send JSON data
+        body: JSON.stringify({ wordLength, allowRepeatingLetters }),
       });
 
       if (response.ok) {
@@ -111,7 +114,8 @@ function App() {
     }
 
     if (playerName.trim()) {
-      saveHighscore(playerName, elapsedTime);
+      const numberGuesses = guesses.length;
+      saveHighscore(playerName, elapsedTime, numberGuesses, allowRepeatingLetters);
       setIsHighscoreSubmitted(true);
     } else {
       alert("Enter a valid name!");
