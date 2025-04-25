@@ -7,9 +7,9 @@ body {
     rgb(70, 70, 70) 100%
   );
   display: flex;
-  min-height: 98vh;
   max-width: 1600px;
   margin: auto;
+  justify-content: center;
 }
 
 div {
@@ -32,6 +32,7 @@ div {
   max-width: 2000px;
   min-width: 500px;
   text-align: center;
+  margin: 25px 0 25px 0;
 }
 
 .about_container p {
@@ -59,7 +60,7 @@ div {
   border-color: #696969;
   border-style: solid;
   color: white;
-  margin: 20 auto;
+  margin: 15px auto 50px auto;
 }
 
 .feature_list {
@@ -70,6 +71,7 @@ div {
   margin-right: 20px;
   list-style-type: none;
   margin: 15 auto;
+  padding: auto;
 }
 
 .program_list {
@@ -80,6 +82,7 @@ div {
   margin-right: 20px;
   list-style-type: none;
   margin: 15 auto;
+  padding: auto;
 }
 
 li {
@@ -108,12 +111,13 @@ p {
   margin-top: 20px;
 }
 
-@media only screen and (max-width: 1200px) {
+@media only screen and (max-width: 1600px) {
   body {
-   
+    width: 100%;
     margin: auto;
     height: 100%;
     min-width: 700px;
+    text-align: center;
   }
 
   .title_text {
@@ -122,13 +126,20 @@ p {
   }
 
   .features_container {
-    background-color: aliceblue;
     display: flex;
     flex-direction: column;
+    justify-content: center;
+    align-items: center;
     border-radius: 50px;
     border-color: #696969;
     border-style: solid;
-    color: rgb(175, 13, 13);
-    width: x;
+  }
+
+  .feature_list {
+    padding: 0;
+  }
+
+  .program_list {
+    padding: 0;
   }
 }
