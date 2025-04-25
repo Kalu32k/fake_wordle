@@ -1,0 +1,99 @@
+body {
+    background: linear-gradient(
+        0deg,
+        rgb(70, 70, 70) 0%,
+        rgb(119, 214, 119) 40%,
+        rgb(119, 214, 119) 60%,
+        rgb(70, 70, 70) 100%
+    );
+
+    min-height: 100vh;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+}
+
+table {
+    margin: 0 auto;
+    width: 80%;
+    background-color: #4b4b4b;
+    border-color: #696969;
+    border-radius: 50px;
+    color: white;
+    text-align: center;
+    border-style: solid;
+    border-width: 5px;
+    box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    overflow: hidden;
+}
+
+th {
+    border-style: transparent;
+    background-color: #404040;
+    color: white;
+    font-size: 1.5em;
+    padding: 10px;
+}
+
+td {
+    background-color: #4b4b4b;
+    color: white;
+    font-size: 1.2em;
+    padding: 10px;
+    font-size: 1.2em;
+    margin-top: 20px;
+}
+
+td:hover {
+    background-color: #696969;
+    color: white;
+}
+
+h1 {
+    color: white;
+    font-size: 2.5em;
+    text-align: center;
+    margin-top: 20px;
+}
+h2 {
+    color: white;
+    font-size: 2em;
+    text-align: center;
+    margin-top: 20px;
+}
+h3 {
+    color: white;
+    font-size: 1.5em;
+    text-align: center;
+    margin-top: 20px;
+}
+p {
+    color: white;
+    font-size: 1.2em;
+    text-align: center;
+    margin-top: 20px;
+}
+
+@media only screen and (max-width: 768px) {
+    body {
+        background-color: black;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+
+    table {
+        width: 100%;
+        font-size: 0.4em;
+        margin: 0 auto;
+        position: relative;
+        }
+
+    h1 {
+        font-size: 2em;
+        margin: 5px;
+        text-shadow: 0 0 5px #696969, 0 0 10px #696969, 0 0 15px #696969;
+    }
+
+}

@@ -1,0 +1,21 @@
+<h1>Highscores</h1>
+<table>
+  <thead>
+    <tr>
+      <th class="head_rank">Rank</th>
+      <th class="head_name">Name</th>
+      <th class="head_time">Time</th>
+      <th class="head_date">Date</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% highscores.forEach((score, index) => { %>
+      <tr>
+        <td class="table_index"><%= index + 1 %></td>
+        <td class="table_name"><%= score.name %></td>
+        <td class="table_time"><%= score.time %> seconds</td>
+        <td class="table_date"><%= new Date(score.date).toLocaleDateString() %></td>
+      </tr>
+    <% }) %>
+  </tbody>
+</table>
