@@ -4,7 +4,7 @@
   "main": "backend/server.js",
   "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
     "dev": "concurrently \"npm run backend\" \"npm run frontend\"",
     "start": "node backend/server.js",
     "build": "cd frontend && npx vite build",
@@ -22,6 +22,7 @@
   },
   "devDependencies": {
     "concurrently": "^9.1.2",
+    "jest": "^29.7.0",
     "nodemon": "^3.1.10"
   }
 }

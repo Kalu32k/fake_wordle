@@ -7,34 +7,36 @@ export async function generateRandomWord(length , allowRepeatingLetters) {
   const data = await fs.readFile("backend/words_alpha.txt", "utf-8");
 
   try {
-    // Read the file asynchronously with "utf-8" encoding
-
-    // Split the file line by line, trim extra spaces, and filter by word length
+    // Filter words on length
     let words = data
       .split("\n")
       .map((word) => word.trim())
       .filter((word) => word.length === length);
 
+      // Error if no matching words are found
     if (words.length === 0) {
-      throw new Error("Inga giltiga ord hittades i filen.");
+      throw new Error("No valid words found in the file.");
     }
 
     if (!allowRepeatingLetters) {
-      // Filtrera bort ord med upprepade bokstäver
       words = words.filter((word) => {
-        const letterSet = new Set(word); // Skapa en Set av bokstäver
-        return letterSet.size === word.length; // Kontrollera att inga bokstäver upprepas
+        const letterSet = new Set(word); 
+        return letterSet.size === word.length;
       });
     }
 
     // Select a random word
     const randomIndex = Math.floor(Math.random() * words.length);
-    console.log("Slumpat ord:", words[randomIndex].toUpperCase());
-    chosenWord = words[randomIndex].toUpperCase(); // Return the word in uppercase
+    console.log("Random word:", words[randomIndex].toUpperCase());
+    chosenWord = words[randomIndex].toUpperCase();
 
+    // If no words are found at all
+    if (chosenWord.length === 0) {
+      throw new Error("No letters found in the word.");
+    }
     return chosenWord;
   } catch (error) {
-    console.error("Kunde inte läsa eller bearbeta words.txt:", error);
+    console.log("An error has occured:", error);
     throw error;
   }
 }
