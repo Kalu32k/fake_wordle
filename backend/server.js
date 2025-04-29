@@ -83,17 +83,6 @@ app.post("/api/guess", (req, res) => {
   }
 });
 
-app.get("/api/highscores", async (req, res) => {
-  try {
-    await mongoose.connect("mongodb://localhost:27017");
-    const getHighscores = await HighscoreDB.find().sort({ time: 1 }).limit(10);
-    res.json({ highscores: getHighscores });
-  } catch (error) {
-    console.error("Error fetching highscores:", error);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-
 app.post("/api/highscore", async (req, res) => {
   try {
     await mongoose.connect("mongodb://localhost:27017");
