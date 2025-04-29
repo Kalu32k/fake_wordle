@@ -30,7 +30,8 @@ app.get("/about", async (req, res) => {
 
 app.get("/highscore_list", async (req, res) => {
   try {
-    await mongoose.connect("mongodb://localhost:27017");
+    // await mongoose.connect("mongodb://localhost:27017");
+    await mongoose.connect(process.env.MONGODB_URL);
     const getHighscores = await HighscoreDB.find().sort({ time: 1 }).limit(20);
 
     render(req, res, "highscore.ejs", "Highscore", {
@@ -85,9 +86,8 @@ app.post("/api/guess", (req, res) => {
 
 app.post("/api/highscore", async (req, res) => {
   try {
-    await mongoose.connect("mongodb://localhost:27017");
-    // await mongoose.connect(process.env.MONGO_URL);
-
+    // await mongoose.connect("mongodb://localhost:27017");
+    await mongoose.connect(process.env.MONGODB_URL);
     const newHighscore = new HighscoreDB({
       name: req.body.name,
       time: req.body.time,
