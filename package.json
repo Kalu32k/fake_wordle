@@ -4,6 +4,7 @@
   "main": "backend/server.js",
   "type": "module",
   "scripts": {
+    "setup": "npm install && npm install --prefix frontend && npm run build --prefix frontend",
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
     "dev": "concurrently \"npm run backend\" \"npm run frontend\"",
     "start": "node backend/server.js",
