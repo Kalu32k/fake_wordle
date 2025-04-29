@@ -28,7 +28,7 @@ app.get("/about", async (req, res) => {
   res.send(htmlText.toString());
 });
 
-app.get("/test", async (req, res) => {
+app.get("/highscore_list", async (req, res) => {
   try {
     await mongoose.connect("mongodb://localhost:27017");
     const getHighscores = await HighscoreDB.find().sort({ time: 1 }).limit(20);
